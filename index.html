@@ -144,6 +144,222 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-常用网站模板下载地址" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/27/%E5%B8%B8%E7%94%A8%E7%BD%91%E7%AB%99%E6%A8%A1%E6%9D%BF%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80/">常用网站模板下载地址</a>
+    </h1>
+  
+
+        
+        <a href="/2020/10/27/%E5%B8%B8%E7%94%A8%E7%BD%91%E7%AB%99%E6%A8%A1%E6%9D%BF%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80/" class="archive-article-date">
+  	<time datetime="2020-10-27T10:13:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>   1.<a target="_blank" rel="noopener" href="https://templated.co/">https://templated.co/</a> </p>
+<ol start="2">
+<li><a target="_blank" rel="noopener" href="https://templatemo.com/">https://templatemo.com/</a> </li>
+<li><a target="_blank" rel="noopener" href="https://startbootstrap.com/themes/">https://startbootstrap.com/themes/</a> </li>
+<li><a target="_blank" rel="noopener" href="https://github.com/learning-zone/website-templates">https://github.com/learning-zone/website-templates</a> </li>
+<li><a target="_blank" rel="noopener" href="https://colorlib.com/">https://colorlib.com/</a> </li>
+<li><a target="_blank" rel="noopener" href="https://bootstrapmade.com/">https://bootstrapmade.com/</a> </li>
+<li><a target="_blank" rel="noopener" href="https://bootstraptaste.com/">https://bootstraptaste.com/</a></li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/10/27/%E5%B8%B8%E7%94%A8%E7%BD%91%E7%AB%99%E6%A8%A1%E6%9D%BF%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-人脸识别部分函数解析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/26/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E9%83%A8%E5%88%86%E5%87%BD%E6%95%B0%E8%A7%A3%E6%9E%90/">人脸识别部分函数解析</a>
+    </h1>
+  
+
+        
+        <a href="/2020/10/26/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E9%83%A8%E5%88%86%E5%87%BD%E6%95%B0%E8%A7%A3%E6%9E%90/" class="archive-article-date">
+  	<time datetime="2020-10-26T01:03:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1-截取人脸图像"><a href="#1-截取人脸图像" class="headerlink" title="1.截取人脸图像"></a>1.截取人脸图像</h1><p>使用image[y:H, x:W]</p>
+<p><img src="/2020/10/26/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E9%83%A8%E5%88%86%E5%87%BD%E6%95%B0%E8%A7%A3%E6%9E%90/image-20201026090948364.png" alt="image-20201026090948364"></p>
+<h1 id="2-保存图片"><a href="#2-保存图片" class="headerlink" title="2.保存图片"></a>2.保存图片</h1><p>一般情况下使用cv2.imwrite(save_path,face)，将截取到的face保存到save_face路径下。</p>
+<p>但是当盖路径中存在中文，代码不会报错但是不能保存成功，这时我们需要使用imencode()函数</p>
+<p>代码示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cv2.imencode(<span class="string">&#x27;.jpg&#x27;</span>, face)[<span class="number">1</span>].tofile(<span class="string">&#x27;./rec_temp/徐志超.jpg&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/10/26/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E9%83%A8%E5%88%86%E5%87%BD%E6%95%B0%E8%A7%A3%E6%9E%90/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-DDcGAN代码解析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/22/DDcGAN%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90/">DDcGAN代码解析</a>
+    </h1>
+  
+
+        
+        <a href="/2020/10/22/DDcGAN%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90/" class="archive-article-date">
+  	<time datetime="2020-10-22T08:36:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1-h5数据集"><a href="#1-h5数据集" class="headerlink" title="1.h5数据集"></a>1.h5数据集</h1><h2 id="1-1基本介绍"><a href="#1-1基本介绍" class="headerlink" title="1.1基本介绍"></a>1.1基本介绍</h2><p>HDF5 文件是一种为了储存和处理大数据而设计的文件格式，具有极高的压缩率。H5接受的数据是矩阵，通常跟<code>numpy</code>库一起使用。</p>
+<p>一个HDF5文件包含两种对象： 1. group：类似与文件夹，读取可类比python中的字典。 2. dataset：数据内容，类比<code>numpy</code>中的array。</p>
+<h2 id="1-2基本操作"><a href="#1-2基本操作" class="headerlink" title="1.2基本操作"></a>1.2基本操作</h2><p>读取h5文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> h5py</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="comment"># 打开文件</span></span><br><span class="line">f = h5py.File(<span class="string">&#x27;Training_Dataset.h5&#x27;</span>, <span class="string">&#x27;r&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>查询文件中的关键字，下面的输出结果表示该训练数据集中只包含一个名为‘data’的数据集</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;f.keys()</span><br><span class="line">[<span class="string">&#x27;data&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>以切片的形式获取该数据集中的数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sources = f[<span class="string">&#x27;data&#x27;</span>][:]</span><br></pre></td></tr></table></figure>
+
+<p>输出该数据集的shape，结果显示该数据集包含22912张84*84大小的2通道图片</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;sources.shape</span><br><span class="line">(<span class="number">22912</span>, <span class="number">2</span>, <span class="number">84</span>, <span class="number">84</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="2"><a href="#2" class="headerlink" title="2."></a>2.</h1>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/10/22/DDcGAN%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-创建个人主页" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
