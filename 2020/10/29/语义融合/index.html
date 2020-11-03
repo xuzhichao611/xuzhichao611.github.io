@@ -15,16 +15,16 @@
 <meta property="og:site_name" content="卧薪尝胆">
 <meta property="og:description" content="一、思路​    以前的融合都是针对整张图片进行融合，改论文为了在融合任务中更具有针对性的保留源图像目标和背景区域的信息，将语义分割和生成对抗网络相结合，提出了语义融合的方式。对每一对相同语义的区域采用不同的融合方式进行融合。 二、方法采用语义融合的方式做红外图像和可见光图像之间的融合步骤如下：  通过语义分割，得到带有红外图像目标区域的语义信息的掩膜Im 将步骤1中得到的掩膜Im带有的语义信息分">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2020/10/29/%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E8%9E%8D%E5%90%88%E6%96%B9%E6%B3%95%E5%9B%BE%E8%A7%A3.png">
-<meta property="og:image" content="http://example.com/2020/10/29/%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E7%9B%AE%E6%A0%87%E8%9E%8D%E5%90%88%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="http://example.com/2020/10/29/%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E8%9E%8D%E5%90%88%E6%96%B9%E6%B3%95%E5%9B%BE%E8%A7%A3.png">
+<meta property="og:image" content="http://example.com/2020/10/29/%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E7%9B%AE%E6%A0%87%E8%9E%8D%E5%90%88%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84.png">
 <meta property="og:image" content="file:///C:/Users/XUZHIC~1/AppData/Local/Temp/ksohtml5380/wps1.jpg">
-<meta property="og:image" content="d:/研究生/blog/source_posts/语义融合/背景融合网络结构.png">
+<meta property="og:image" content="http://example.com/2020/10/29/%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E8%83%8C%E6%99%AF%E8%9E%8D%E5%90%88%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84.png">
 <meta property="og:image" content="file:///C:/Users/XUZHIC~1/AppData/Local/Temp/ksohtml5380/wps2.jpg">
 <meta property="article:published_time" content="2020-10-29T00:46:53.000Z">
-<meta property="article:modified_time" content="2020-11-03T12:20:18.123Z">
+<meta property="article:modified_time" content="2020-11-03T12:30:43.678Z">
 <meta property="article:author" content="ZhiChao Xu">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2020/10/29/%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E8%9E%8D%E5%90%88%E6%96%B9%E6%B3%95%E5%9B%BE%E8%A7%A3.png">
+<meta name="twitter:image" content="http://example.com/2020/10/29/%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E8%9E%8D%E5%90%88%E6%96%B9%E6%B3%95%E5%9B%BE%E8%A7%A3.png">
   
     <link rel="alternative" href="/atom.xml" title="卧薪尝胆" type="application/atom+xml">
   
@@ -182,7 +182,7 @@
 <li>将步骤3中得到的目标融合结果If1和步骤4中得到的背景融合结果If2进行融合得到最终的融合图像If</li>
 </ol>
 <p>图解：</p>
-<p><img src="%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E8%9E%8D%E5%90%88%E6%96%B9%E6%B3%95%E5%9B%BE%E8%A7%A3.png" alt="融合方法图解"></p>
+<p><img src="/2020/10/29/%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E8%9E%8D%E5%90%88%E6%96%B9%E6%B3%95%E5%9B%BE%E8%A7%A3.png" alt="融合方法图解"></p>
 <h2 id="三、语义分割"><a href="#三、语义分割" class="headerlink" title="三、语义分割"></a>三、语义分割</h2><p>分割思路：</p>
 <ol>
 <li><p>将红外图像和与之对应的标注图作为输入，训练语义分割网络Deeplabv3+，通过该网络，我们可以得到带有语义信息的掩膜Im。</p>
@@ -195,13 +195,13 @@
 </ol>
 <h2 id="四、图像融合"><a href="#四、图像融合" class="headerlink" title="四、图像融合"></a>四、图像融合</h2><p>由于红外图像和可见光图像的目标融合要保存的信息和红外图像和可见光图像的背景融合要保存的信息差距较大，所以采用不同的融合策略，来保证在融合图像中的不同区域能更具有针对性的保存信息。</p>
 <h3 id="4-1目标融合"><a href="#4-1目标融合" class="headerlink" title="4.1目标融合"></a>4.1目标融合</h3><p>目标融合的目标是保存大量的红外图像中的强度信息同时保存部分可见光图像中的细节信息。因此网络结构中，生成器的目标G1就是生成包含大量红外信息的融合图像If1去欺骗鉴别器，可见光图像Iv1和融合图像If1作为鉴别器D1的输入，训练鉴别器，使得融合图像If1保存可见光图像中的纹理细节。网络结构如下：</p>
-<p><img src="%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E7%9B%AE%E6%A0%87%E8%9E%8D%E5%90%88%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84.png" alt="目标融合网络结构"></p>
+<p><img src="/2020/10/29/%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E7%9B%AE%E6%A0%87%E8%9E%8D%E5%90%88%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84.png" alt="目标融合网络结构"></p>
 <p>损失函数：</p>
 <p>​<br>$$<br>L_{G1}=L_{adv1}+\lambda <em>{1}L</em>{1}<br>$$<br>其中<img src="file:///C:\Users\XUZHIC~1\AppData\Local\Temp\ksohtml5380\wps1.jpg" alt="img">代表生成器<strong>G</strong>1整体的损失，<strong>λ</strong>1是1个常数，用于平衡2项损失函数<strong>L</strong>1和<strong>L</strong>adv1．<strong>L</strong>adv1代表生成器<strong>G</strong>1和鉴别器<strong>D</strong>1之间的对抗损失</p>
 <p>$$<br>L_{adv1}=\frac{1}{N}\sum_{n=1}^{N}(D_{1}(I_{f1}^{n}-c)^2<br>$$<br>其中<strong>N</strong>代表融合图像的数量，<strong>c</strong>代表生成器<strong>G</strong>1希望鉴别器<strong>D</strong>1相信的融合图像的值．<br>$$<br>L_{1}=\frac{1}{HW}(||I_{f1}-I_{r1}||<em>{F}^2+\xi</em>{1}||\nabla I_{f1}-\nabla I_{v1}||_{F}^2)<br>$$<br>上式<strong>L</strong>1代表目标区域内容损失，其中<strong>H</strong>和<strong>W</strong>代表输入图像的高和宽，||<strong><em>\</em>·**</strong>||F表示矩阵的Frobenius范数，Ñ表示梯度算子，括号中的第1项用于在融合图像<strong>I</strong>f1中保留红外图像目标区域<strong>I</strong>r1的对比度信息，第2项用于保留可见光图像目标区域<strong>I</strong>v1的纹理细节，<strong>ξ</strong>1是1个常数，用于平衡2项．</p>
 <p>鉴别器的损失函数如下：<br>$$<br>L_{D1}=\frac{1}{N} \sum_{n=1}^{N}(D_{1}(I_{v1}) -b)^2+\frac{1}{N}\sum_{n=1}{N}(D_{1}(I_{f1})-a)^2<br>$$<br>其中<strong>a</strong>和<strong>b</strong>分别代表<strong>I</strong>f1和<strong>I</strong>v1的标签，<strong>D</strong>1(<strong>I</strong>f1)和<strong>D</strong>1(<strong>I</strong>v1)分别代表<strong>I</strong>f1和<strong>I</strong>v1的鉴别结果．</p>
 <h3 id="4-2背景融合"><a href="#4-2背景融合" class="headerlink" title="4.2背景融合"></a>4.2背景融合</h3><p>背景融合的目标是保存大量的可见光图像中的除目标外的纹理信息同时保存部分红外图像中的强度信息。因此网络结构中，生成器的目标G2就是生成包含大量可见光信息的融合图像If2去欺骗鉴别器，可见光图像Iv2和融合图像If2作为鉴别器D2的输入，训练鉴别器，使得融合图像If2保存红外图像中的强度信息。网络结构如下：</p>
-<p><img src="D:\研究生\blog\source_posts\语义融合\背景融合网络结构.png" alt="背景融合网络结构"></p>
+<p><img src="/2020/10/29/%E8%AF%AD%E4%B9%89%E8%9E%8D%E5%90%88/%E8%83%8C%E6%99%AF%E8%9E%8D%E5%90%88%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84.png" alt="背景融合网络结构"></p>
 <p>损失函数：</p>
 <p>$$<br>L_{G2}=L_{adv2}+\lambda <em>{2}L</em>{2}<br>$$<br>其中<img src="file:///C:\Users\XUZHIC~1\AppData\Local\Temp\ksohtml5380\wps2.jpg" alt="img">代表生成器<strong>G</strong>2整体的损失，<strong>λ</strong>2是1个常数，用于平衡2项损失函数<strong>L</strong>2和<strong>L</strong>adv2．</p>
 <p>​<br>$$<br>L_{adv2}=\frac{1}{N}\sum_{n=1}^{N}(D_{2}(I_{f2}^{n}-d)^2<br>$$<br>上式<strong>L</strong>adv2代表生成器<strong>G</strong>2和鉴别器<strong>D</strong>2之间的对抗损失，其中<strong>d</strong>代表生成器<strong>G</strong>2希望鉴别器<strong>D</strong>2相信的融合图像的数值。<br>$$<br>L_{2}=\frac{1}{HW}(||I_{f2}-I_{r2}||<em>{F}^2+\xi</em>{2}||\nabla I_{f2}-\nabla I_{v2}||<em>{F}^2)<br>$$<br>上式表示的是内容损失，其中<strong>ξ</strong>2是1个常数，用于平衡括号内的左右2项。<br>$$<br>L</em>{D2}=\frac{1}{N} \sum_{n=1}^{N}(D_{2}(I_{r1}) -e)^2+\frac{1}{N}\sum_{n=1}{N}(D_{2}(I_{f2})-f)^2<br>$$<br>其中<strong>e</strong>和<strong>f</strong>分别代表<strong>I</strong>r2和<strong>I</strong>f2的标签，<strong>D</strong>2(<strong>I</strong>f2)和<strong>D</strong>2(<strong>I</strong>r2)分别代表<strong>I</strong>f2和<strong>I</strong>r2的鉴别结果。</p>
