@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 8.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xuzhichao611.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="头文件的作用 libavformat&#x2F;avformat.h:封装多媒体封装格式（容器）的读写，如mp4、avi或摄像头流 libavcodec&#x2F;avcodec.h:音视频编解码库，用于解码或编码视频帧。 libavdevice&#x2F;avdevice.h:设备输入输出库，用于访问摄像头、麦克风等。 libswscale&#x2F;swscale.h:图像像素格式和分辨率转换">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FFmpeg学习记录">
+<meta property="og:url" content="https://xuzhichao611.github.io/2025/11/11/FFmpeg%E5%AD%A6%E4%B9%A0%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:site_name" content="超人天上飞">
+<meta property="og:description" content="头文件的作用 libavformat&#x2F;avformat.h:封装多媒体封装格式（容器）的读写，如mp4、avi或摄像头流 libavcodec&#x2F;avcodec.h:音视频编解码库，用于解码或编码视频帧。 libavdevice&#x2F;avdevice.h:设备输入输出库，用于访问摄像头、麦克风等。 libswscale&#x2F;swscale.h:图像像素格式和分辨率转换">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-11T07:03:08.000Z">
+<meta property="article:modified_time" content="2025-12-04T07:36:12.206Z">
+<meta property="article:author" content="Zhichao Xu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://xuzhichao611.github.io/2025/11/11/FFmpeg%E5%AD%A6%E4%B9%A0%E6%95%99%E7%A8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>FFmpeg学习记录 | 超人天上飞</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">超人天上飞</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xuzhichao611.github.io/2025/11/11/FFmpeg%E5%AD%A6%E4%B9%A0%E6%95%99%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Zhichao Xu">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="超人天上飞">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          FFmpeg学习记录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-11 15:03:08" itemprop="dateCreated datePublished" datetime="2025-11-11T15:03:08+08:00">2025-11-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-12-04 15:36:12" itemprop="dateModified" datetime="2025-12-04T15:36:12+08:00">2025-12-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="头文件的作用"><a href="#头文件的作用" class="headerlink" title="头文件的作用"></a>头文件的作用</h1><ul>
+<li>libavformat&#x2F;avformat.h:封装多媒体封装格式（容器）的读写，如mp4、avi或摄像头流</li>
+<li>libavcodec&#x2F;avcodec.h:音视频编解码库，用于解码或编码视频帧。</li>
+<li>libavdevice&#x2F;avdevice.h:设备输入输出库，用于访问摄像头、麦克风等。</li>
+<li>libswscale&#x2F;swscale.h:图像像素格式和分辨率转换库。</li>
+<li>libavutil&#x2F;imgutils.h:提供图像缓冲区分配、计算所需空间等工具函数。</li>
+</ul>
+<h1 id="AVFrame中常用成员说明"><a href="#AVFrame中常用成员说明" class="headerlink" title="AVFrame中常用成员说明"></a>AVFrame中常用成员说明</h1><h2 id="通用数据指针"><a href="#通用数据指针" class="headerlink" title="通用数据指针"></a>通用数据指针</h2><p><code>uint8_t *data[AV_NUM_DATA_POINTERS]</code><br><strong>说明</strong>：这是一个指针数组，用于存放指向实际平面数据的指针。<br><strong>对于视频</strong>：通常用于存储YUV格式数据。例如：<code>data[0]</code>-&gt;Y分量（亮度），<code>data[1]</code>-&gt;U分量（色度），<code>data[2]</code>-&gt;V分量（色度）。<br><strong>对于音频</strong>：用于存储PCM数据。<br><code>AV_NUM_DATA_POINTERS </code>通常为8</p>
+<h2 id="行宽和步长"><a href="#行宽和步长" class="headerlink" title="行宽和步长"></a>行宽和步长</h2><p><code>int linesize[AV_NUM_DATA_POINTERS]</code><br><strong>说明</strong>：与data数组对应，表示每个平面中一行像素或一个声道的音频数据的字节大小。<br><strong>对于视频</strong>：<code>linesize[0]</code>表示Y平面一行的字节数，<code>linesize[1]</code>表示U平面一行的字节数，<code>linesize[2]</code>表示V平面一行的字节数。<strong>由于内存对齐的要求，这个值可能大于图像宽度</strong>。例如，一个宽度为1280的YUV420P图像，其<code>linesize[0]</code>可能是1280，也可能是1284或1312等对齐后的值。<strong>因此在计算像素位置时，必须使用</strong><code>linesize[0] </code><strong>而不是图像的宽度。</strong></p>
+<h2 id="格式与描述"><a href="#格式与描述" class="headerlink" title="格式与描述"></a>格式与描述</h2><p><code>int format</code><br><strong>说明</strong>：描述帧的格式。<br><strong>对于视频</strong>：其值是<code>AVPixelFormat</code>枚举（如<code>AV_PIX_FMT_YUV420P</code>），定义了像素的存储格式（色彩空间、平面&#x2F;打包等）。<br><strong>对于音频</strong>：其值是<code>AVSampleForamt</code>枚举（如<code>AV_SAMPLE_FMT_FLIP</code>），定义了采样数据格式（整数&#x2F;浮点，平面&#x2F;交错等）。<br><code>AVRational sample_aspect_ratio</code><br><strong>说明</strong>：像素宽高比，描述了单个像素的宽高比，用于正确显示图像而不变形。例如，标准定义的宽高比为16:9。<br><code>int64_t pts</code><br><strong>说明</strong>：显示时间戳 。表示该帧在什么时间应该被显示出来，单位是<code>AVStream-&gt;time_base</code>。这是处理音频同步的关键。<br><strong>注意</strong>：从解码器中出来的帧，其PTS可能不是连续的，或者需要根据<code>AVStream-&gt;time_base</code>换算。<br><code>int coded_picture_number： </code>在编码序中的位序号。<br><code>int display_picture_number： </code>在显示序中的帧序号。</p>
+<h2 id="视频特定成员"><a href="#视频特定成员" class="headerlink" title="视频特定成员"></a>视频特定成员</h2><p><code>int width, height</code><br><strong>说明</strong>：图像的宽度和高度，以像素为单位。<br><code>int key_frame</code><br><strong>说明</strong>：标识这一帧是否为关键帧（I帧）。<code>0</code>表示不是，<code>1</code>表示是。<br><code>enum AVPictureType pict_type</code><br><strong>说明</strong>：帧的类型</p>
+<ul>
+<li><code>AV_PICTURE_TYPE_I</code>：I帧</li>
+<li><code>AV_PICTURE_TYPE_P</code>：P帧</li>
+<li><code>AV_PICTURE_TYPE_B</code>：B帧</li>
+<li><code>AV_PICTURE_TYPE_S</code>：S帧</li>
+<li><code>AV_PICTURE_TYPE_SI</code>：SI帧</li>
+<li><code>AV_PICTURE_TYPE_SP</code>：SP帧</li>
+</ul>
+<p><code>AVRational repeat_pict</code><br><strong>说明</strong>：指示在解码时，某些格式（如MJPEG）中B帧需要延时多久再显示。用于更精确的计算PTS。<br><code>int flags </code><br><strong>说明：<strong>在FFmpeg中，每个<code>AVPaket</code>都有一个<code>int flags</code>字段，用于标识数据包的一些特殊属性或状态标志。这些标志是按</strong>位掩码</strong>定义的，也就是说可以同时存在多个标志 （用按位或｜组合）。</p>
+<h3 id="常用可选值"><a href="#常用可选值" class="headerlink" title="常用可选值"></a>常用可选值</h3><table>
+<thead>
+<tr>
+<th>宏名</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AV_PKT_FLAG_KEY</td>
+<td>表示该包是关键帧（I帧），可以单独解码</td>
+</tr>
+<tr>
+<td>AV_PKT_FLAG_CORRUPT</td>
+<td>表示该包数据损坏（例如网络丢包导致）</td>
+</tr>
+<tr>
+<td>AV_PKT_FLAG_DISCARD</td>
+<td>表示该包可被丢弃（非必要数据）</td>
+</tr>
+<tr>
+<td>AV_PKT_FLAG_TRUSTED</td>
+<td>表示该包来自可信源</td>
+</tr>
+<tr>
+<td>AV_PKT_FLAG_DISPOSABLE</td>
+<td>表示该帧可被忽略（非关键帧且仅临时辅助使用）</td>
+</tr>
+<tr>
+<td>AV_PKT_FLAG_SKIP</td>
+<td>表示解码器可跳过此包（很少见）</td>
+</tr>
+<tr>
+<td>AV_PKT_FLAG_DECRYPTED</td>
+<td>表示包已被解密（用于加密流）</td>
+</tr>
+<tr>
+<td>AV_PKT_FLAG_FRAME</td>
+<td>表示该包对应一个完整帧（通常在封装层使用）</td>
+</tr>
+</tbody></table>
+<h2 id="缓冲区和引用计数"><a href="#缓冲区和引用计数" class="headerlink" title="缓冲区和引用计数"></a>缓冲区和引用计数</h2><p><code>AVFrame</code>通常不直接分配数据内存，而是引用底层的<code>AVBuffer</code>。</p>
+<ul>
+<li><code>AVBufferRef *buf[AV_NUM_DATA_POINTERS]</code><br><strong>说明</strong>：与<code>data</code>数组对应的缓冲区引用。如果<code>buff[i]</code>不为NULL，则表示<code>data[i]</code>指向的内存是由<code>buff[i]</code>管理的。这是FFmpeg实现引用计数的核心。  </li>
+<li><code>int ref_count</code><br><strong>说明</strong>：是<code>AVFrame</code>的引用计数。当引用计数减为0时，帧会被自动释放。<strong>不要直接修改该值</strong>，应使用<code>av_frame_ref</code>和<code>av_frame_unref</code>等API来管理。</li>
+</ul>
+<h1 id="常用函数解析"><a href="#常用函数解析" class="headerlink" title="常用函数解析"></a>常用函数解析</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int avformat_open_input(AVFormatContext **ps, const char *url,   AVInputFormat *fmt, AVDictionary **options);</span><br></pre></td></tr></table></figure>
+<p>返回值：0表示媒体源打开成功，非0表示打开失败</p>
+<h1 id="解码流程"><a href="#解码流程" class="headerlink" title="解码流程"></a>解码流程</h1><p>Step1:打开媒体源，<code>avformat_open_input()</code><br>Step2:查找流，<code>avformat_find_stream_info()</code><br>Step3：查找解码器，<code>avcodec_find_decoder()</code><br>Step4:打开解码器，<code>avcodec_open2()</code><br>Step5:循环读包解码处理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">while(av_read_frame())</span><br><span class="line">&#123;</span><br><span class="line">  avcodec_send_packet();</span><br><span class="line">  while(avcodec_receive_frame())</span><br><span class="line">  &#123;</span><br><span class="line">    //处理帧</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="编码流程"><a href="#编码流程" class="headerlink" title="编码流程"></a>编码流程</h1><p>Step1:创建输出，<code>avformat_alloc_output_context2()</code><br>Step2:查找编码器，<code>avcodec_find_encoder()</code><br>Step3:循环编码写包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">while(有帧要编码)</span><br><span class="line">&#123;</span><br><span class="line">  avcodec_send_frame();</span><br><span class="line">  avcodec_receive_packet();</span><br><span class="line">  av_write_frame();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="常见错误"><a href="#常见错误" class="headerlink" title="常见错误"></a>常见错误</h1><h2 id="AVERROR-EAGAIN"><a href="#AVERROR-EAGAIN" class="headerlink" title="AVERROR(EAGAIN)"></a>AVERROR(EAGAIN)</h2><p>av_read_frame failed: -35(Resource temporarily unavailable)，表示当前摄像头未输出数据，可以延时一下再此尝试读取。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">retVal = av_read_frame(fmtCtx, pkt);</span><br><span class="line">    if(retVal == AVERROR(EAGAIN))</span><br><span class="line">    &#123;</span><br><span class="line">        // 没有数据，稍后再试</span><br><span class="line">        std::this_thread::sleep_for(std::chrono::milliseconds(10));</span><br><span class="line">        KOSA_bufPutEmpty(&amp;pktBuf, pkt, KOSA_TIMEOUT_FOREVER);</span><br><span class="line">        return true;</span><br><span class="line">    &#125;   </span><br><span class="line">    else if(retVal &lt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        char errbuf[128];</span><br><span class="line">        av_strerror(retVal, errbuf, sizeof(errbuf));</span><br><span class="line">        KOSA_bufPutEmpty(&amp;pktBuf, pkt, KOSA_TIMEOUT_FOREVER);</span><br><span class="line">        std::cerr &lt;&lt; &quot;av_read_frame failed: &quot; &lt;&lt; retVal &lt;&lt; &quot;(&quot; &lt;&lt; errbuf &lt;&lt; &quot;)&quot; &lt;&lt; std::endl;</span><br><span class="line">        _readExit = true;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h1><h2 id="平铺格式（Planar）"><a href="#平铺格式（Planar）" class="headerlink" title="平铺格式（Planar）"></a>平铺格式（Planar）</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//YUV420P格式：三个完全分开的平面</span><br><span class="line">//内存布局：</span><br><span class="line">[YYYYYYYYYY...]//平面0，Y分量</span><br><span class="line">[UUUU...]      //平面1，U分量</span><br><span class="line">[VVVV...]      //平面2，V分量</span><br><span class="line">//在AVFrame中</span><br><span class="line">frame-&gt;data[0] 指向 Y平面</span><br><span class="line">frame-&gt;data[1] 指向 U平面  </span><br><span class="line">frame-&gt;data[2] 指向 V平面</span><br></pre></td></tr></table></figure>
+<p><strong>特点</strong>：  </p>
+<ul>
+<li>每个分量在内存中完全分开</li>
+<li>处理某个分量时很方便</li>
+</ul>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>处理效率高：如果只需要灰度图像（亮度Y），直接操作data[0]即可</li>
+<li>压缩友好：色度分量可以单独进行下采样（例如nv12nv21）</li>
+<li>并行处理：不同平面可以同时处理</li>
+</ul>
+<p><strong>实用场景</strong>：</p>
+<ul>
+<li>视频编解码（H.264等)</li>
+<li>图像处理算法</li>
+<li>色彩空间转换</li>
+</ul>
+<h2 id="打包格式"><a href="#打包格式" class="headerlink" title="打包格式"></a>打包格式</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//RGB24格式：像素交错排列</span><br><span class="line">//内存布局：</span><br><span class="line">[RGB] [RGB] [RGB] [RGB] [RGB] [RGB] [RGB]...</span><br><span class="line">//在AVFrame中</span><br><span class="line">frame-&gt;data[0] 指向所有数据（data[1], data[2] 可能为NULL）</span><br></pre></td></tr></table></figure>
+<p><strong>特点</strong>：  </p>
+<ul>
+<li>每个像素的各个分量紧挨排列</li>
+<li>适合直接展示，处理单个分量不方便</li>
+</ul>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>显示友好：直接对应显示硬件需求</li>
+<li>内部局部性：一个像素的所有分量都在一起</li>
+<li>传输效率：适合直接发送到显卡</li>
+</ul>
+<h1 id="使用MJPEG推流显示"><a href="#使用MJPEG推流显示" class="headerlink" title="使用MJPEG推流显示"></a>使用MJPEG推流显示</h1><p><strong>服务端（C++ MJPEG HTTP Server）</strong></p>
+<ul>
+<li>监听8080端口</li>
+<li>接收客户端（推流端）连接</li>
+<li>将推送的JPEG帧转发给所有浏览器客户端</li>
+<li>浏览器访问<code>http://127.0.0.1:8080/video.mjpg</code>即可实时浏览<br><strong>客户端（C++ MJEPG Client)</strong></li>
+<li>从RTSP（或本地摄像头）读取视频帧</li>
+<li>使用FFmpeg解码并转为JPEG</li>
+<li>通过TCP POST方式向服务端推送JPEG帧</li>
+<li>使用 multipart&#x2F;x-mixed-replace 格式？？？？？？？？</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/11/11/C++%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" rel="prev" title="C++基础知识">
+      <i class="fa fa-chevron-left"></i> C++基础知识
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/12/04/Git%E6%93%8D%E4%BD%9C/" rel="next" title="Git 操作">
+      Git 操作 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%B4%E6%96%87%E4%BB%B6%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">头文件的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AVFrame%E4%B8%AD%E5%B8%B8%E7%94%A8%E6%88%90%E5%91%98%E8%AF%B4%E6%98%8E"><span class="nav-number">2.</span> <span class="nav-text">AVFrame中常用成员说明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E6%95%B0%E6%8D%AE%E6%8C%87%E9%92%88"><span class="nav-number">2.1.</span> <span class="nav-text">通用数据指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%8C%E5%AE%BD%E5%92%8C%E6%AD%A5%E9%95%BF"><span class="nav-number">2.2.</span> <span class="nav-text">行宽和步长</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%BC%E5%BC%8F%E4%B8%8E%E6%8F%8F%E8%BF%B0"><span class="nav-number">2.3.</span> <span class="nav-text">格式与描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E7%89%B9%E5%AE%9A%E6%88%90%E5%91%98"><span class="nav-number">2.4.</span> <span class="nav-text">视频特定成员</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%8F%AF%E9%80%89%E5%80%BC"><span class="nav-number">2.4.1.</span> <span class="nav-text">常用可选值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%86%B2%E5%8C%BA%E5%92%8C%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"><span class="nav-number">2.5.</span> <span class="nav-text">缓冲区和引用计数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E8%A7%A3%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">常用函数解析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E7%A0%81%E6%B5%81%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">解码流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E6%B5%81%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">编码流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF"><span class="nav-number">6.</span> <span class="nav-text">常见错误</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AVERROR-EAGAIN"><span class="nav-number">6.1.</span> <span class="nav-text">AVERROR(EAGAIN)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F"><span class="nav-number">7.</span> <span class="nav-text">数据格式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B3%E9%93%BA%E6%A0%BC%E5%BC%8F%EF%BC%88Planar%EF%BC%89"><span class="nav-number">7.1.</span> <span class="nav-text">平铺格式（Planar）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E6%A0%BC%E5%BC%8F"><span class="nav-number">7.2.</span> <span class="nav-text">打包格式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8MJPEG%E6%8E%A8%E6%B5%81%E6%98%BE%E7%A4%BA"><span class="nav-number">8.</span> <span class="nav-text">使用MJPEG推流显示</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Zhichao Xu</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhichao Xu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

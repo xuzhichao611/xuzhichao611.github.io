@@ -172,7 +172,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-12-04 15:03:08 / 修改时间：15:04:09" itemprop="dateCreated datePublished" datetime="2025-12-04T15:03:08+08:00">2025-12-04</time>
+              <time title="创建时间：2025-12-04 15:03:08 / 修改时间：15:36:15" itemprop="dateCreated datePublished" datetime="2025-12-04T15:03:08+08:00">2025-12-04</time>
             </span>
 
           
@@ -236,7 +236,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xuzhichao611.github.io/2025/11/11/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/">
+    <link itemprop="mainEntityOfPage" href="https://xuzhichao611.github.io/2025/11/11/FFmpeg%E5%AD%A6%E4%B9%A0%E6%95%99%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -250,7 +250,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/11/11/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" class="post-title-link" itemprop="url">我的第一篇文章</a>
+            <a href="/2025/11/11/FFmpeg%E5%AD%A6%E4%B9%A0%E6%95%99%E7%A8%8B/" class="post-title-link" itemprop="url">FFmpeg学习记录</a>
         </h2>
 
         <div class="post-meta">
@@ -260,8 +260,15 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2025-11-11 16:56:08" itemprop="dateCreated datePublished" datetime="2025-11-11T16:56:08+08:00">2025-11-11</time>
+              <time title="创建时间：2025-11-11 15:03:08" itemprop="dateCreated datePublished" datetime="2025-11-11T15:03:08+08:00">2025-11-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-12-04 15:36:12" itemprop="dateModified" datetime="2025-12-04T15:36:12+08:00">2025-12-04</time>
+              </span>
 
           
 
@@ -274,7 +281,122 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <h1 id="头文件的作用"><a href="#头文件的作用" class="headerlink" title="头文件的作用"></a>头文件的作用</h1><ul>
+<li>libavformat&#x2F;avformat.h:封装多媒体封装格式（容器）的读写，如mp4、avi或摄像头流</li>
+<li>libavcodec&#x2F;avcodec.h:音视频编解码库，用于解码或编码视频帧。</li>
+<li>libavdevice&#x2F;avdevice.h:设备输入输出库，用于访问摄像头、麦克风等。</li>
+<li>libswscale&#x2F;swscale.h:图像像素格式和分辨率转换库。</li>
+<li>libavutil&#x2F;imgutils.h:提供图像缓冲区分配、计算所需空间等工具函数。</li>
+</ul>
+<h1 id="AVFrame中常用成员说明"><a href="#AVFrame中常用成员说明" class="headerlink" title="AVFrame中常用成员说明"></a>AVFrame中常用成员说明</h1><h2 id="通用数据指针"><a href="#通用数据指针" class="headerlink" title="通用数据指针"></a>通用数据指针</h2><p><code>uint8_t *data[AV_NUM_DATA_POINTERS]</code><br><strong>说明</strong>：这是一个指针数组，用于存放指向实际平面数据的指针。<br><strong>对于视频</strong>：通常用于存储YUV格式数据。例如：<code>data[0]</code>-&gt;Y分量（亮度），<code>data[1]</code>-&gt;U分量（色度），<code>data[2]</code>-&gt;V分量（色度）。<br><strong>对于音频</strong>：用于存储PCM数据。<br><code>AV_NUM_DATA_POINTERS </code>通常为8</p>
+<h2 id="行宽和步长"><a href="#行宽和步长" class="headerlink" title="行宽和步长"></a>行宽和步长</h2><p><code>int linesize[AV_NUM_DATA_POINTERS]</code><br><strong>说明</strong>：与data数组对应，表示每个平面中一行像素或一个声道的音频数据的字节大小。<br><strong>对于视频</strong>：<code>linesize[0]</code>表示Y平面一行的字节数，<code>linesize[1]</code>表示U平面一行的字节数，<code>linesize[2]</code>表示V平面一行的字节数。<strong>由于内存对齐的要求，这个值可能大于图像宽度</strong>。例如，一个宽度为1280的YUV420P图像，其<code>linesize[0]</code>可能是1280，也可能是1284或1312等对齐后的值。<strong>因此在计算像素位置时，必须使用</strong><code>linesize[0] </code><strong>而不是图像的宽度。</strong></p>
+<h2 id="格式与描述"><a href="#格式与描述" class="headerlink" title="格式与描述"></a>格式与描述</h2><p><code>int format</code><br><strong>说明</strong>：描述帧的格式。<br><strong>对于视频</strong>：其值是<code>AVPixelFormat</code>枚举（如<code>AV_PIX_FMT_YUV420P</code>），定义了像素的存储格式（色彩空间、平面&#x2F;打包等）。<br><strong>对于音频</strong>：其值是<code>AVSampleForamt</code>枚举（如<code>AV_SAMPLE_FMT_FLIP</code>），定义了采样数据格式（整数&#x2F;浮点，平面&#x2F;交错等）。<br><code>AVRational sample_aspect_ratio</code><br><strong>说明</strong>：像素宽高比，描述了单个像素的宽高比，用于正确显示图像而不变形。例如，标准定义的宽高比为16:9。<br><code>int64_t pts</code><br><strong>说明</strong>：显示时间戳 。表示该帧在什么时间应该被显示出来，单位是<code>AVStream-&gt;time_base</code>。这是处理音频同步的关键。<br><strong>注意</strong>：从解码器中出来的帧，其PTS可能不是连续的，或者需要根据<code>AVStream-&gt;time_base</code>换算。<br><code>int coded_picture_number： </code>在编码序中的位序号。<br><code>int display_picture_number： </code>在显示序中的帧序号。</p>
+<h2 id="视频特定成员"><a href="#视频特定成员" class="headerlink" title="视频特定成员"></a>视频特定成员</h2><p><code>int width, height</code><br><strong>说明</strong>：图像的宽度和高度，以像素为单位。<br><code>int key_frame</code><br><strong>说明</strong>：标识这一帧是否为关键帧（I帧）。<code>0</code>表示不是，<code>1</code>表示是。<br><code>enum AVPictureType pict_type</code><br><strong>说明</strong>：帧的类型</p>
+<ul>
+<li><code>AV_PICTURE_TYPE_I</code>：I帧</li>
+<li><code>AV_PICTURE_TYPE_P</code>：P帧</li>
+<li><code>AV_PICTURE_TYPE_B</code>：B帧</li>
+<li><code>AV_PICTURE_TYPE_S</code>：S帧</li>
+<li><code>AV_PICTURE_TYPE_SI</code>：SI帧</li>
+<li><code>AV_PICTURE_TYPE_SP</code>：SP帧</li>
+</ul>
+<p><code>AVRational repeat_pict</code><br><strong>说明</strong>：指示在解码时，某些格式（如MJPEG）中B帧需要延时多久再显示。用于更精确的计算PTS。<br><code>int flags </code><br><strong>说明：<strong>在FFmpeg中，每个<code>AVPaket</code>都有一个<code>int flags</code>字段，用于标识数据包的一些特殊属性或状态标志。这些标志是按</strong>位掩码</strong>定义的，也就是说可以同时存在多个标志 （用按位或｜组合）。</p>
+<h3 id="常用可选值"><a href="#常用可选值" class="headerlink" title="常用可选值"></a>常用可选值</h3><table>
+<thead>
+<tr>
+<th>宏名</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AV_PKT_FLAG_KEY</td>
+<td>表示该包是关键帧（I帧），可以单独解码</td>
+</tr>
+<tr>
+<td>AV_PKT_FLAG_CORRUPT</td>
+<td>表示该包数据损坏（例如网络丢包导致）</td>
+</tr>
+<tr>
+<td>AV_PKT_FLAG_DISCARD</td>
+<td>表示该包可被丢弃（非必要数据）</td>
+</tr>
+<tr>
+<td>AV_PKT_FLAG_TRUSTED</td>
+<td>表示该包来自可信源</td>
+</tr>
+<tr>
+<td>AV_PKT_FLAG_DISPOSABLE</td>
+<td>表示该帧可被忽略（非关键帧且仅临时辅助使用）</td>
+</tr>
+<tr>
+<td>AV_PKT_FLAG_SKIP</td>
+<td>表示解码器可跳过此包（很少见）</td>
+</tr>
+<tr>
+<td>AV_PKT_FLAG_DECRYPTED</td>
+<td>表示包已被解密（用于加密流）</td>
+</tr>
+<tr>
+<td>AV_PKT_FLAG_FRAME</td>
+<td>表示该包对应一个完整帧（通常在封装层使用）</td>
+</tr>
+</tbody></table>
+<h2 id="缓冲区和引用计数"><a href="#缓冲区和引用计数" class="headerlink" title="缓冲区和引用计数"></a>缓冲区和引用计数</h2><p><code>AVFrame</code>通常不直接分配数据内存，而是引用底层的<code>AVBuffer</code>。</p>
+<ul>
+<li><code>AVBufferRef *buf[AV_NUM_DATA_POINTERS]</code><br><strong>说明</strong>：与<code>data</code>数组对应的缓冲区引用。如果<code>buff[i]</code>不为NULL，则表示<code>data[i]</code>指向的内存是由<code>buff[i]</code>管理的。这是FFmpeg实现引用计数的核心。  </li>
+<li><code>int ref_count</code><br><strong>说明</strong>：是<code>AVFrame</code>的引用计数。当引用计数减为0时，帧会被自动释放。<strong>不要直接修改该值</strong>，应使用<code>av_frame_ref</code>和<code>av_frame_unref</code>等API来管理。</li>
+</ul>
+<h1 id="常用函数解析"><a href="#常用函数解析" class="headerlink" title="常用函数解析"></a>常用函数解析</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int avformat_open_input(AVFormatContext **ps, const char *url,   AVInputFormat *fmt, AVDictionary **options);</span><br></pre></td></tr></table></figure>
+<p>返回值：0表示媒体源打开成功，非0表示打开失败</p>
+<h1 id="解码流程"><a href="#解码流程" class="headerlink" title="解码流程"></a>解码流程</h1><p>Step1:打开媒体源，<code>avformat_open_input()</code><br>Step2:查找流，<code>avformat_find_stream_info()</code><br>Step3：查找解码器，<code>avcodec_find_decoder()</code><br>Step4:打开解码器，<code>avcodec_open2()</code><br>Step5:循环读包解码处理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">while(av_read_frame())</span><br><span class="line">&#123;</span><br><span class="line">  avcodec_send_packet();</span><br><span class="line">  while(avcodec_receive_frame())</span><br><span class="line">  &#123;</span><br><span class="line">    //处理帧</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="编码流程"><a href="#编码流程" class="headerlink" title="编码流程"></a>编码流程</h1><p>Step1:创建输出，<code>avformat_alloc_output_context2()</code><br>Step2:查找编码器，<code>avcodec_find_encoder()</code><br>Step3:循环编码写包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">while(有帧要编码)</span><br><span class="line">&#123;</span><br><span class="line">  avcodec_send_frame();</span><br><span class="line">  avcodec_receive_packet();</span><br><span class="line">  av_write_frame();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="常见错误"><a href="#常见错误" class="headerlink" title="常见错误"></a>常见错误</h1><h2 id="AVERROR-EAGAIN"><a href="#AVERROR-EAGAIN" class="headerlink" title="AVERROR(EAGAIN)"></a>AVERROR(EAGAIN)</h2><p>av_read_frame failed: -35(Resource temporarily unavailable)，表示当前摄像头未输出数据，可以延时一下再此尝试读取。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">retVal = av_read_frame(fmtCtx, pkt);</span><br><span class="line">    if(retVal == AVERROR(EAGAIN))</span><br><span class="line">    &#123;</span><br><span class="line">        // 没有数据，稍后再试</span><br><span class="line">        std::this_thread::sleep_for(std::chrono::milliseconds(10));</span><br><span class="line">        KOSA_bufPutEmpty(&amp;pktBuf, pkt, KOSA_TIMEOUT_FOREVER);</span><br><span class="line">        return true;</span><br><span class="line">    &#125;   </span><br><span class="line">    else if(retVal &lt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        char errbuf[128];</span><br><span class="line">        av_strerror(retVal, errbuf, sizeof(errbuf));</span><br><span class="line">        KOSA_bufPutEmpty(&amp;pktBuf, pkt, KOSA_TIMEOUT_FOREVER);</span><br><span class="line">        std::cerr &lt;&lt; &quot;av_read_frame failed: &quot; &lt;&lt; retVal &lt;&lt; &quot;(&quot; &lt;&lt; errbuf &lt;&lt; &quot;)&quot; &lt;&lt; std::endl;</span><br><span class="line">        _readExit = true;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h1><h2 id="平铺格式（Planar）"><a href="#平铺格式（Planar）" class="headerlink" title="平铺格式（Planar）"></a>平铺格式（Planar）</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//YUV420P格式：三个完全分开的平面</span><br><span class="line">//内存布局：</span><br><span class="line">[YYYYYYYYYY...]//平面0，Y分量</span><br><span class="line">[UUUU...]      //平面1，U分量</span><br><span class="line">[VVVV...]      //平面2，V分量</span><br><span class="line">//在AVFrame中</span><br><span class="line">frame-&gt;data[0] 指向 Y平面</span><br><span class="line">frame-&gt;data[1] 指向 U平面  </span><br><span class="line">frame-&gt;data[2] 指向 V平面</span><br></pre></td></tr></table></figure>
+<p><strong>特点</strong>：  </p>
+<ul>
+<li>每个分量在内存中完全分开</li>
+<li>处理某个分量时很方便</li>
+</ul>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>处理效率高：如果只需要灰度图像（亮度Y），直接操作data[0]即可</li>
+<li>压缩友好：色度分量可以单独进行下采样（例如nv12nv21）</li>
+<li>并行处理：不同平面可以同时处理</li>
+</ul>
+<p><strong>实用场景</strong>：</p>
+<ul>
+<li>视频编解码（H.264等)</li>
+<li>图像处理算法</li>
+<li>色彩空间转换</li>
+</ul>
+<h2 id="打包格式"><a href="#打包格式" class="headerlink" title="打包格式"></a>打包格式</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//RGB24格式：像素交错排列</span><br><span class="line">//内存布局：</span><br><span class="line">[RGB] [RGB] [RGB] [RGB] [RGB] [RGB] [RGB]...</span><br><span class="line">//在AVFrame中</span><br><span class="line">frame-&gt;data[0] 指向所有数据（data[1], data[2] 可能为NULL）</span><br></pre></td></tr></table></figure>
+<p><strong>特点</strong>：  </p>
+<ul>
+<li>每个像素的各个分量紧挨排列</li>
+<li>适合直接展示，处理单个分量不方便</li>
+</ul>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>显示友好：直接对应显示硬件需求</li>
+<li>内部局部性：一个像素的所有分量都在一起</li>
+<li>传输效率：适合直接发送到显卡</li>
+</ul>
+<h1 id="使用MJPEG推流显示"><a href="#使用MJPEG推流显示" class="headerlink" title="使用MJPEG推流显示"></a>使用MJPEG推流显示</h1><p><strong>服务端（C++ MJPEG HTTP Server）</strong></p>
+<ul>
+<li>监听8080端口</li>
+<li>接收客户端（推流端）连接</li>
+<li>将推送的JPEG帧转发给所有浏览器客户端</li>
+<li>浏览器访问<code>http://127.0.0.1:8080/video.mjpg</code>即可实时浏览<br><strong>客户端（C++ MJEPG Client)</strong></li>
+<li>从RTSP（或本地摄像头）读取视频帧</li>
+<li>使用FFmpeg解码并转为JPEG</li>
+<li>通过TCP POST方式向服务端推送JPEG帧</li>
+<li>使用 multipart&#x2F;x-mixed-replace 格式？？？？？？？？</li>
+</ul>
+
       
     </div>
 
@@ -293,7 +415,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xuzhichao611.github.io/2025/11/11/hello-world/">
+    <link itemprop="mainEntityOfPage" href="https://xuzhichao611.github.io/2025/11/11/C++%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -307,7 +429,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/11/11/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
+            <a href="/2025/11/11/C++%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="post-title-link" itemprop="url">C++基础知识</a>
         </h2>
 
         <div class="post-meta">
@@ -317,8 +439,15 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2025-11-11 16:29:33" itemprop="dateCreated datePublished" datetime="2025-11-11T16:29:33+08:00">2025-11-11</time>
+              <time title="创建时间：2025-11-11 15:03:08" itemprop="dateCreated datePublished" datetime="2025-11-11T15:03:08+08:00">2025-11-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-12-04 15:36:13" itemprop="dateModified" datetime="2025-12-04T15:36:13+08:00">2025-12-04</time>
+              </span>
 
           
 
@@ -331,19 +460,465 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+          <h1 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h1><h2 id="join和detach作用及区别"><a href="#join和detach作用及区别" class="headerlink" title="join和detach作用及区别"></a>join和detach作用及区别</h2><p><code>join()</code>等待线程结束，同步方式<br>含义：主线程等待子线程执行完毕后再继续执行<br>特点：</p>
+<ul>
+<li>是否阻塞：主线程会等待</li>
+<li>是否安全：安全，资源会正确释放</li>
+<li>声明周期：由主线程管理</li>
+<li>使用场景：主线程要依赖子线程的结果时（如计算、加载等）<br><code>detach()</code>线程独立运行，异步方式<br>含义：线程脱离控制，变为后台线程（守护线程）。执行结束后，系统会自动回收资源，主线程不能再与之交互。<br>特点：</li>
+<li>是否阻塞：不阻塞，子线程独立运行</li>
+<li>是否安全：可能线程未完成，程序就退出了</li>
+<li>使用场景：后台任务（日志、心跳、定时等）</li>
+</ul>
+<h1 id="互斥锁及条件变量"><a href="#互斥锁及条件变量" class="headerlink" title="互斥锁及条件变量"></a>互斥锁及条件变量</h1><h2 id="std-mutex–互斥锁"><a href="#std-mutex–互斥锁" class="headerlink" title="std::mutex–互斥锁"></a>std::mutex–互斥锁</h2><p>作用：用来保护共享资源，避免多线程同时访问导致数据冲突，保证同一时间只有一个线程访问资源。<br>使用方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;mutex&gt;</span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line">int sharedData = 0;</span><br><span class="line"></span><br><span class="line">void threadFunc() &#123;</span><br><span class="line">    std::lock_guard&lt;std::mutex&gt; lock(mtx); // 自动上锁，离开作用域自动解锁</span><br><span class="line">    sharedData++;</span><br><span class="line">    // mtx.unlock(); // 不需要手动解锁</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>关键点：</p>
+<ol>
+<li><code>lock()</code> 上锁，<code>unlock()</code>解锁</li>
+<li>推荐使用<code>std::lock_gurad</code>或<code>std::unique_lock</code>防止忘记解锁</li>
+<li>尽量只锁需要保护的部分，避免长时间持有锁影响性能</li>
+</ol>
+<h2 id="std-condition-variable–条件变量"><a href="#std-condition-variable–条件变量" class="headerlink" title="std::condition_variable–条件变量"></a>std::condition_variable–条件变量</h2><p>作用：</p>
+<ul>
+<li>用于线程之间等待某一个条件发生</li>
+<li>经常和<code>std::mutex</code>搭配使用</li>
+<li>一个线程可以等待条件变量通知，另一个线程改变状态后通知。<br>核心函数：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">std::condition_variable cv;</span><br><span class="line"></span><br><span class="line">cv.wait(lock, []()&#123; return 条件成立; &#125;);  // 等待条件，条件成立，直接返回，条件不成立，当前线程阻塞，让其他线程可以访问共享资源，当其他线程调用cv.notify_one()或cv_notify_all()时，该线程会被唤醒。</span><br><span class="line">cv.notify_one();  // 通知一个等待线程</span><br><span class="line">cv.notify_all();  // 通知所有等待线程</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<h1 id="模版类问题"><a href="#模版类问题" class="headerlink" title="模版类问题"></a>模版类问题</h1><p><strong>结论</strong>：C++模版类的成员函数通常需要在同一个文件中实现（即头文件.h或.hpp文件内）.<br><strong>现象</strong>：若类模版成员函数声明在.h文件，实现在.cpp文件，会报错<code>undefined reference to MyTemplate&lt;int&gt;::print()</code>。<br><strong>原因</strong>：模版在编译时不会立即生成代码，它只是一个“代码生成规则”。只有实例化时，编译器才会根据模版参数生成真正的代码。  </p>
+<h1 id="C-11新特性"><a href="#C-11新特性" class="headerlink" title="C++11新特性"></a>C++11新特性</h1><h2 id="std-array–定长数组容器"><a href="#std-array–定长数组容器" class="headerlink" title="std::array–定长数组容器"></a>std::array–定长数组容器</h2><p><strong>说明</strong>：结合了C数组的高性能与STL容器的安全和易用性。  </p>
+<h3 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h3><p><strong>包含头文件</strong>：<code>#include &lt;array&gt;</code><br><strong>定义形式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::array&lt;T, N&gt; array;</span><br><span class="line">//T: 元素类型</span><br><span class="line">//N: 元素个数（必须是编译期常量）</span><br></pre></td></tr></table></figure>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>元素存储在栈上（不像<code>std::vector使用堆内存</code>）</li>
+<li>大小固定，在编译期间确定，不能调整</li>
+<li>支持所有STL接口（迭代器、范围for、比较、算法等）</li>
+<li>比C数组更安全：有边界检查、有<code>.size()</code>等方法</li>
+<li>性能和C数组相同（几乎无额外开销）</li>
+</ul>
+<h3 id="二、创建与初始化"><a href="#二、创建与初始化" class="headerlink" title="二、创建与初始化"></a>二、创建与初始化</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;array&gt;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">  std::array&lt;int, 3&gt; a1 = &#123;1, 2, 3&#125;;//初始化列表</span><br><span class="line">  std::array&lt;int, 3&gt; a2&#123;4, 5, 6&#125;;   //统一初始化</span><br><span class="line">  std::array&lt;int, 3&gt; a3 = &#123;&#125;;       //全部为0</span><br><span class="line">  std::array&lt;int, 3&gt; a4;            //未初始化，值未定</span><br><span class="line">  for(auto a : a1)</span><br><span class="line">    std::cout &lt;&lt; a &lt;&lt; “”;</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>arr.size()</td>
+<td>返回元素个数</td>
+<td>a.size()</td>
+</tr>
+<tr>
+<td>arr.empty()</td>
+<td>判断是否为空</td>
+<td>a.empty()</td>
+</tr>
+<tr>
+<td>arr.fill(value)</td>
+<td>所有元素赋值</td>
+<td>a.fill(0)</td>
+</tr>
+<tr>
+<td>arr.front()</td>
+<td>第一个元素</td>
+<td>a.front()</td>
+</tr>
+<tr>
+<td>arr.back()</td>
+<td>最后一个元素</td>
+<td>a.back()</td>
+</tr>
+<tr>
+<td>arr[i]</td>
+<td>下标访问（无边界检查）</td>
+<td>a[1]</td>
+</tr>
+<tr>
+<td>arr.at(i)</td>
+<td>下标访问（有边界检查）</td>
+<td>a.at(1)</td>
+</tr>
+<tr>
+<td>arr.begin(),arr.end()</td>
+<td>迭代器</td>
+<td>for(auto &amp;x : a)</td>
+</tr>
+<tr>
+<td>arr.data()</td>
+<td>返回底层指针（类似C数组）</td>
+<td>int *p &#x3D; a.data()</td>
+</tr>
+</tbody></table>
+<h1 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h1><p><strong>定义</strong>：一段可被作为参数传递给其他函数的代码，并且在适当的时候（由接收该函数的函数确定）被调用。类似于你给别人你的电话号码，然后让他们在需要的时候打给你。</p>
+<h1 id="类中禁止拷贝"><a href="#类中禁止拷贝" class="headerlink" title="类中禁止拷贝"></a>类中禁止拷贝</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class SDLdisplay</span><br><span class="line">&#123;</span><br><span class="line">  SDLdisplay(const SDLdisplay&amp;) = delete;</span><br><span class="line">  SDLdisplay&amp; operator=(const SDLdisplay&amp;) = delete;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p><strong>禁止拷贝原因</strong>：类SDLdisplay可能管理着窗口句柄，图形资源，其他不可复制的系统资源。如果可以拷贝，会导致以下问题：</p>
+<ul>
+<li><strong>双重释放</strong>：两个对象尝试释放同一个资源</li>
+<li><strong>资源泄漏</strong>：资源丢失无法释放</li>
+<li><strong>未定义行为</strong>：访问已释放资源</li>
+</ul>
+<h1 id="sizeof和stelen区别"><a href="#sizeof和stelen区别" class="headerlink" title="sizeof和stelen区别"></a>sizeof和stelen区别</h1><p><strong>sizeof为编译期运算符，用来获取变量或类型所占的字节数。</strong><br><strong>特点</strong>：</p>
+<ul>
+<li>在编译期确定大小（不随内容改变）</li>
+<li>获取的是对象所占内存大小</li>
+<li>用于数组、结构体、基本类型的字节数计算<br><strong>strlen用于计算C风格字符串长度</strong></li>
+<li>只适用于C风格字符串（char且以\0结尾）</li>
+<li>返回长度&#x3D;字符个数，不包含\0</li>
+<li>运行期函数，需要遍历字符直到遇到\0，是O(n)时间复杂度，需要一个字节一个字节的扫描</li>
+<li>对非\0结尾的数组使用strlen会导致未定义行为（UB）</li>
+</ul>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+      
+    </div>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xuzhichao611.github.io/2025/11/11/OpenCV%E5%AD%A6%E4%B9%A0%E6%95%99%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Zhichao Xu">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="超人天上飞">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/11/11/OpenCV%E5%AD%A6%E4%B9%A0%E6%95%99%E7%A8%8B/" class="post-title-link" itemprop="url">OpenCV学习记录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-11 15:03:08" itemprop="dateCreated datePublished" datetime="2025-11-11T15:03:08+08:00">2025-11-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-12-04 15:35:11" itemprop="dateModified" datetime="2025-12-04T15:35:11+08:00">2025-12-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">void displayThreadFunc(KOSA_QueHndl *frameQue)</span><br><span class="line">&#123;</span><br><span class="line">    while(true)</span><br><span class="line">    &#123;</span><br><span class="line">        KOSAframe *framePtr = nullptr;</span><br><span class="line">        int count = KOSA_queGetQueueCount(frameQue);</span><br><span class="line">        std::cout &lt;&lt; &quot;que count:&quot; &lt;&lt; count &lt;&lt; &quot;:&quot; &lt;&lt; frameQue-&gt;count &lt;&lt; std::endl;</span><br><span class="line">        int ret = KOSA_queGet(frameQue, (void **)&amp;framePtr, KOSA_TIMEOUT_FOREVER);</span><br><span class="line">        if(ret != KOSA_SOK)</span><br><span class="line">        &#123;</span><br><span class="line">            std::cout &lt;&lt; &quot;get failed&quot; &lt;&lt; std::endl;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line">        cv::Mat img = framePtr-&gt;frame;</span><br><span class="line">        </span><br><span class="line">        cv::imshow(&quot;Camera&quot;, img);</span><br><span class="line">        cv::waitKey(1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码中<code>cv::imshow(&quot;Camera&quot;, img); </code>崩溃。报错如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">frame #11: 0x000000019619d248 AppKit`-[NSWindow _initContent:styleMask:backing:defer:contentView:] + 260</span><br><span class="line">frame #12: 0x000000019619d138 AppKit`-[NSWindow initWithContentRect:styleMask:backing:defer:] + 48</span><br></pre></td></tr></table></figure>
+<p>此崩溃表示Mac的GUI框架AppKit在创建窗口时报错，这是因为AppKit不允许在子线程中创建窗口</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xuzhichao611.github.io/2025/11/11/QT%E5%AD%A6%E4%B9%A0%E6%95%99%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Zhichao Xu">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="超人天上飞">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/11/11/QT%E5%AD%A6%E4%B9%A0%E6%95%99%E7%A8%8B/" class="post-title-link" itemprop="url">QT学习记录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-11 15:03:08" itemprop="dateCreated datePublished" datetime="2025-11-11T15:03:08+08:00">2025-11-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-12-04 15:36:15" itemprop="dateModified" datetime="2025-12-04T15:36:15+08:00">2025-12-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="信号槽机制"><a href="#信号槽机制" class="headerlink" title="信号槽机制"></a>信号槽机制</h1><p><strong>信号槽机制特点：</strong></p>
+<ul>
+<li>类型安全：参数类型必须匹配</li>
+<li>松耦合：发送者不知道接收者</li>
+<li>多对多：一个信号和连接多个槽，一个槽可以接收多个信号</li>
+</ul>
+<p><strong>信号（Signals）</strong></p>
+<ul>
+<li>只有声明，没有实现</li>
+<li>返回值必须是<strong>void</strong></li>
+<li>可以是带参数，也可以是不带参数</li>
+<li>在<strong>signals:区域</strong>进行声明</li>
+</ul>
+<p><strong>连接（Connect）</strong><br>连接语法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">QObject::connect(发送者，信号，接收者，槽，连接类型);</span><br><span class="line">#实际例子</span><br><span class="line">QObject::connect(button, &amp;QPushButton::clicked, window, &amp;MainWindow::onButtonClicked);</span><br></pre></td></tr></table></figure>
+<p><strong>连接类型：</strong><br><strong>自动连接（AutoConnection）</strong>–默认</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">connect(btn, &amp;QPushButton::clicked, this, &amp;MainWindow::onClick, Qt::AutoConnection);</span><br></pre></td></tr></table></figure>
+<p>行为：如果发送者和接收者在同一线程，使用DirectConnection；否则使用QueuedConnection<br>使用场景：大多数情况下默认选择<br><strong>直连（DirectConnection）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">connect(btn, &amp;QPushButton::clicked, this, &amp;MainWindow::onClick, Qt::DirectConnection);</span><br></pre></td></tr></table></figure>
+<p>行为：信号发射时立即调用槽函数，就像函数调用一样<br>线程安全：必须在同一线程<br>使用场景：性能要求高，且在同一线程<br><strong>队列连接（QueuedConnection）-跨线程</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">connect(worker, &amp;Worker::resultReady, this, &amp;MainWindow::handleResult, Qt::QueuedConnection);</span><br></pre></td></tr></table></figure>
+<p>行为：将槽函数调用放入接收者线程的事件队列，异步执行<br>线程安全：可以跨线程，参数会被拷贝<br>使用场景：跨线程通信<br><strong>阻塞队列连接（BlockingQueuedConnection）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">connect(worker, &amp;Worker::resultReady, this, &amp;MainWindow::handleResult, </span><br><span class="line">        Qt::BlockingQueuedConnection);</span><br></pre></td></tr></table></figure>
+<p>行为：类似于QueuedConnection，但会阻塞发送者线程直到槽函数执行完成<br>线程安全：跨线程，但发送者和接收者必须在不同线程<br>使用场景：需要等待结果的跨线程通信<br><strong>唯一连接（UniqueConnection）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">connect(btn, &amp;QPushButton::clicked, this, &amp;MainWindow::onClick, Qt::UniqueConnection);</span><br></pre></td></tr></table></figure>
+<p>行为：确保相同的连接只建立一次（防止重复连接）<br>使用场景：防止信号被多次连接同一个槽</p>
+<p><strong>报错处理</strong><br>QT开启视频流时崩溃</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">avformat_open_input(&amp;fmtCtx, device.c_str(), inputFmt, &amp;options)</span><br></pre></td></tr></table></figure>
+<p>原因可能是由于QT没有打开摄像头的权限，需要在YourProject.app&#x2F;Contents&#x2F;Info.plist中添加如下权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;key\&gt;NSCameraUsageDescription&lt;/key\&gt;</span><br><span class="line">&lt;string\&gt;此应用需要访问摄像头以显示视频预览&lt;/string\&gt;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xuzhichao611.github.io/2025/11/11/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Zhichao Xu">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="超人天上飞">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/11/11/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="post-title-link" itemprop="url">网络编程学习记录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-11 15:03:08" itemprop="dateCreated datePublished" datetime="2025-11-11T15:03:08+08:00">2025-11-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-12-04 15:35:34" itemprop="dateModified" datetime="2025-12-04T15:35:34+08:00">2025-12-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h2><p><strong>框架</strong>：  </p>
+<ol>
+<li>创建socket套字节</li>
+<li>绑定自己的IP地址和端口号</li>
+<li>监听</li>
+<li>等待客户端连接</li>
+<li>数据收&#x2F;发</li>
+<li>关闭套字节（具有网络属性的文件描述符）</li>
+</ol>
+<h3 id="什么是小端和大端"><a href="#什么是小端和大端" class="headerlink" title="什么是小端和大端"></a>什么是小端和大端</h3><p>大端和小端是指多字节数据在内存中的存储顺序</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>存储顺序</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>小端</td>
+<td>低位字节存低地址</td>
+</tr>
+<tr>
+<td>大端</td>
+<td>高位字节存低地址</td>
+</tr>
+</tbody></table>
+<p><strong>大端：高位在前</strong><br><strong>小端：低为在前</strong></p>
+<h3 id="主机序和网络序大小端转换函数"><a href="#主机序和网络序大小端转换函数" class="headerlink" title="主机序和网络序大小端转换函数"></a>主机序和网络序大小端转换函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>htons</td>
+<td>16位主机序-&gt;网络序</td>
+</tr>
+<tr>
+<td>htonl</td>
+<td>32位主机序-&gt;网络序</td>
+</tr>
+<tr>
+<td>ntohs</td>
+<td>16位网络序 -&gt;主机序</td>
+</tr>
+<tr>
+<td>ntohl</td>
+<td>32位网络序-&gt; 主机序</td>
+</tr>
+</tbody></table>
+<h3 id="1、创建socket套字节"><a href="#1、创建socket套字节" class="headerlink" title="1、创建socket套字节"></a>1、创建socket套字节</h3><p><strong>头文件</strong>：<br><code>#include&lt;sys/types.h&gt;</code><br><code>#include&lt;sys/socket.h&gt;</code><br><code>int socket(int domain, int type, int protocol)</code><br><strong>功能</strong>：创建一个具有网络属性的文件描述符。<br><strong>参数</strong>：<br>  <strong>domain</strong>：协议族  </p>
+<ul>
+<li>AF_UNIX、AF_LOCAL  本地连接</li>
+<li>AF_INET     IPv4</li>
+<li>AF_INET6  IPv6</li>
+</ul>
+<p>  <strong>type</strong>：  </p>
+<ul>
+<li><pre><code> SOCK_STREAM：流式套字节，面向连接的字节流TCP。保证顺序且可靠（重传）
+</code></pre>
+</li>
+<li><pre><code> SOCK_DGRAM：数据报套字节，面向无连接的数据报UDP。每次`sendto/recvfrom`保持报文边界
+</code></pre>
+</li>
+<li><pre><code> SOCK_RAW： 原始套字节，直接访问网络层或链路层（需要特权）。用于实现自定义协议或抓包。
+</code></pre>
+</li>
+<li><pre><code> SOCK_SEQPACKET：有连接的顺序报文（介于STREAM和DGRAM之间，保留报文边界且有连接性）。
+</code></pre>
+</li>
+</ul>
+<p><strong>如何选</strong>：要做TCP用SOCK_STREAM，要做UDP用SOCK_DGRAM。要做自定义协议或抓包用SOCK_RAW（需要root或管理员权限）。<br>  <strong>protocol</strong>：指定具体的传输协议（协议号）。多数时候该参数设置为0表示使用domain+type对应的默认协议（例如AF_INET+SOCK_STREAM默认是TCP）。  </p>
+<ul>
+<li>0:让内核挑选合适的协议。</li>
+<li><code>IPPROTO_TCP</code>：TCP（通常用SOCK_STREAM明确指定）</li>
+<li><code>IPPROTO_UDP</code>：UDP（通常用SOCK_DGRAM明确指定）</li>
+<li><code>IPPROTO_IP / IPPROTO_RAW</code>：用于原始套字节</li>
+</ul>
+<p><strong>返回值</strong>：<br>  <strong>成功</strong>：返回一个非负的文件描述符<br>  <strong>失败</strong>：返回-1，并设置错误码。</p>
+<h3 id="2、绑定自己的ip地址和端口号"><a href="#2、绑定自己的ip地址和端口号" class="headerlink" title="2、绑定自己的ip地址和端口号"></a>2、绑定自己的ip地址和端口号</h3><p><code>int bind(int sockfd, const struct sockaddr *my_addr, socklen_t addrlen);</code><br><strong>功能</strong>：为socket指定本地地址（IP+端口），使其与本机网络接口的某个端口绑定。<br><strong>参数</strong>：  </p>
+<ul>
+<li>sockfd：通过socket创建出来的具有网络属性的文件描述符。</li>
+<li>my_addr：结构体指针，用来赋值IP地址和端口号</li>
+</ul>
+<p><code>const struct sockaddr *my_addr</code>是一个范型，实际应用中需要传入具体值，如下：<br><strong>IPv4使用sockaddr_in</strong>:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct sockaddr_in addr;</span><br><span class="line">addr.sin_family = AF_INET;</span><br><span class="line">addr.sin_port = htons(8080);</span><br><span class="line">addr.sin_addr.s_addr = INADDR_ANY;//绑定本地所有网卡</span><br><span class="line">//addr.sin_addr.s_addr = inet_addr(“192.168.1.10”);//绑定指定网卡IP</span><br><span class="line">//在传入时必须强转为struct sockaddr</span><br><span class="line">bind(sockfd, (struct sockaddr *)&amp;addr, sizeof(addr));</span><br></pre></td></tr></table></figure>
+<p><strong>IPv6使用sockaddr_in6</strong>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">struct sockaddr_in6 addr;</span><br><span class="line">addr.sin6_family = AF_INET6;</span><br><span class="line">addr.sin6_port = htons(8080);</span><br><span class="line">addr.sin6_addr = in6addr_any;</span><br><span class="line">bind(sockfd, (struct sockaddr *)&amp;addr, sizeof(addr));</span><br></pre></td></tr></table></figure>
+<ul>
+<li>addrlen：结构体的长度</li>
+</ul>
+<p><strong>返回值</strong>：<br><strong>成功</strong>：返回0<br><strong>失败</strong>：返回-1，并设置错误码</p>
+<h3 id="3、监听"><a href="#3、监听" class="headerlink" title="3、监听"></a>3、监听</h3><p><code>int listen(int sockfd, int backlog);</code><br><strong>功能</strong>：将一个已绑定的套字节设置为被动监听状态，告诉操作系统：我准备好接收数据了。通常用于TCP连接，UDP不需要监听。<br><strong>参数</strong>：<br><strong>sockfd</strong>—套字节文件描述符</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int sockfd = socket(AF_INET, SOCK_STREAM, 0);</span><br><span class="line">bind(sockfd, (struct sockaddr *)&amp;addr, sizeof(addr));</span><br><span class="line">listen(sockfd, 5);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>必须是TCP套字节（SOCK_STREAM）</li>
+<li>必须已绑定到本地IP+端口，如果没绑定，调用listen会失效</li>
+</ul>
+<p><strong>backlog</strong>—半连接队列长度<br> backlog决定操作系统为这个监听socket分配的等待连接队列长度。<br><strong>队列概念</strong><br>TCP三次握手过程：</p>
+<ol>
+<li>客户端发送SYN</li>
+<li>服务端收到，发送SYN-ACK（进入到半连接队列）</li>
+<li>客户端发送ACK-&gt;建立连接，进入已连接队列<br><strong>backlog定义的就是半连接队列（尚未完成三次握手的连接）长度上限。</strong></li>
+</ol>
+<ul>
+<li>如果半连接队列满了，新的客户端尝试连接会被拒绝或等待。</li>
+<li>一般Linux内核会把backlog取系统允许最大值</li>
+</ul>
+<p><strong>返回值</strong>：<br><strong>成功</strong>：返回0<br><strong>失败</strong>：返回-1，并设置错误码    </p>
+<h3 id="4、等待客户端连接（等待意味着“阻塞”accept）"><a href="#4、等待客户端连接（等待意味着“阻塞”accept）" class="headerlink" title="4、等待客户端连接（等待意味着“阻塞”accept）"></a>4、等待客户端连接（等待意味着“阻塞”accept）</h3><p><code>int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);</code><br><strong>功能</strong>：从全连接队列中取出一个已完成的连接，返回一个新的描述符（socket）用于和该客户端通信。原来的sockfd仍然保持坚挺状态，可以继续接收更多连接。<br><strong>参数详解</strong>：  </p>
+<ul>
+<li><code>sockfd</code>：已经监听的套字节（必须是SOCK_STREAM类型）</li>
+<li><code>strcut sockaddr *addr</code>:(输出参数，可选)指向内存，用于存储建立连接的远端客户端地址，如果不需要存储则传入<code>NULL</code></li>
+<li><code>addrlen </code>：结构体长度。调用前应设置为<code>sizeof(*addr)</code>；调用返回时会被修改为实际写入addr的字节长度。</li>
+</ul>
+<p><strong>返回值</strong>：<br><strong>成功</strong>：返回<strong>非负的</strong>新文件描述符。<br><strong>失败</strong>：返回-1，并设置错误码</p>
+<h4 id="accept与TCP三次握手-队列的关系"><a href="#accept与TCP三次握手-队列的关系" class="headerlink" title="accept与TCP三次握手&#x2F;队列的关系"></a>accept与TCP三次握手&#x2F;队列的关系</h4><ul>
+<li>当客户端发起连接并完成三次握手后，内核会把该连接放入到已完成连接队列，accept会从该队列中取出并返回一个新的fd。</li>
+<li>listen(backlog)控制内核在挂起状态允许的并发连接数</li>
+<li>如果半连接&#x2F;已连接队列已满，新的连接可能会被拒绝或丢弃（客户端会看到连接失败或超时）</li>
+</ul>
 
       
     </div>
@@ -425,7 +1000,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
